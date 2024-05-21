@@ -1,13 +1,15 @@
 import React from "react";
-import holberton_logo from "../assets/holberton_logo.jpg";
+import logo from "../assets/logo.png";
 import "./Header.css";
 
 function Header() {
   return (
-    <div className="header">
-      <img src={holberton_logo} />
-      <h1>School dashboard</h1>
-    </div>
+    <>
+      <div className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1>School dashboard</h1>
+      </div>
+    </>
   );
 }
 

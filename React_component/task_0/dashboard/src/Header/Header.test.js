@@ -1,20 +1,15 @@
-import { shallow } from "enzyme";
 import React from "react";
 import Header from "./Header";
+import { shallow } from "enzyme";
 
-describe("<Header />", () => {
-  it("Header renders without crashing", () => {
+describe("Header", () => {
+  it("render without crashing", () => {
     const wrapper = shallow(<Header />);
     expect(wrapper.exists()).toEqual(true);
   });
-  it("Verify that the components render img", () => {
+  it("should render a h1", () => {
     const wrapper = shallow(<Header />);
-    wrapper.update();
-    expect(wrapper.find("div.header img")).toHaveLength(1);
-  });
-  it("Verify that the components render h1", () => {
-    const wrapper = shallow(<Header />);
-    wrapper.update();
-    expect(wrapper.find("div.header h1")).toHaveLength(1);
+    expect(wrapper.exists("img")).toEqual(true);
+    expect(wrapper.containsMatchingElement(<h1>School dashboard</h1>)).toEqual(true);
   });
 });
