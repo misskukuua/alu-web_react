@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Notifications from "../Notifications/Notifications";
 import Header from "../Header/Header";
 import Login from "../Login/Login";
@@ -20,28 +20,21 @@ const listNotifications = [
   { id: 3, type: "urgent", html: { __html: getLatestNotification() } },
 ];
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { isLoggedIn } = this.props;
-    return (
-      <>
-        <Notifications listNotifications={listNotifications} />
-        <div className="App">
-          <Header />
-        </div>
-        <div className="App-body">
-          {!isLoggedIn ? <Login /> : <CourseList listCourses={listCourses} />}
-        </div>
-        <div className="App-footer">
-          <Footer />
-        </div>
-      </>
-    );
-  }
+function App({ isLoggedIn }) {
+  return (
+    <>
+      <Notifications listNotifications={listNotifications} />
+      <div className="App">
+        <Header />
+      </div>
+      <div className="App-body">
+        {!isLoggedIn ? <Login /> : <CourseList listCourses={listCourses} />}
+      </div>
+      <div className="App-footer">
+        <Footer />
+      </div>
+    </>
+  );
 }
 
 App.defaultProps = {
