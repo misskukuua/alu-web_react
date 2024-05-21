@@ -1,4 +1,3 @@
-
 import './App.css';
 import React from 'react';
 import { hot } from 'react-hot-loader';
@@ -13,7 +12,6 @@ import { getLatestNotification } from '../utils/utils';
 
 class App extends React.Component {
   render() {
-    // instantiate vars from props
     const { isLoggedIn } = this.props;
 
     const listCourses = [

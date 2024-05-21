@@ -1,9 +1,11 @@
 import { shallow } from "enzyme";
 import React from "react";
 import CourseList from "./CourseList";
+import CourseListRow from "./CourseListRow";
 
 describe("<CourseList />", () => {
   let listCourses;
+
   it("CourseList renders without crashing", () => {
     const wrapper = shallow(<CourseList />);
     expect(wrapper.exists()).toEqual(true);
@@ -21,7 +23,7 @@ describe("<CourseList />", () => {
     it("it renders the 5 different rows", () => {
       const wrapper = shallow(<CourseList listCourses={listCourses} />);
       wrapper.update();
-      const item = wrapper.find("CourseListRow");
+      const item = wrapper.find(CourseListRow);
 
       expect(item).toHaveLength(5);
 
@@ -51,11 +53,11 @@ describe("<CourseList />", () => {
       listCourses = [];
     });
 
-    it("it renders the 3 rows without listCourses  without listCourses", () => {
+    it("it renders the 3 rows without listCourses", () => {
       const wrapper = shallow(<CourseList />);
-      expect(wrapper.exists());
+      expect(wrapper.exists()).toEqual(true);
       wrapper.update();
-      const item = wrapper.find("CourseListRow");
+      const item = wrapper.find(CourseListRow);
 
       expect(item).toHaveLength(3);
       expect(item.at(0).prop("textFirstCell")).toEqual("Available courses");
@@ -65,18 +67,16 @@ describe("<CourseList />", () => {
       expect(item.at(1).prop("textSecondCell")).toEqual("Credit");
       expect(item.at(1).prop("isHeader")).toEqual(true);
 
-      expect(item.at(2).prop("textFirstCell")).toEqual(
-        "No course available yet"
-      );
+      expect(item.at(2).prop("textFirstCell")).toEqual("No course available yet");
       expect(item.at(2).prop("textSecondCell")).toEqual(null);
       expect(item.at(2).prop("isHeader")).toEqual(false);
     });
 
     it("it renders the 3 rows with listCourses empty", () => {
       const wrapper = shallow(<CourseList listCourses={listCourses} />);
-      expect(wrapper.exists());
+      expect(wrapper.exists()).toEqual(true);
       wrapper.update();
-      const item = wrapper.find("CourseListRow");
+      const item = wrapper.find(CourseListRow);
 
       expect(item).toHaveLength(3);
       expect(item.at(0).prop("textFirstCell")).toEqual("Available courses");
@@ -86,9 +86,7 @@ describe("<CourseList />", () => {
       expect(item.at(1).prop("textSecondCell")).toEqual("Credit");
       expect(item.at(1).prop("isHeader")).toEqual(true);
 
-      expect(item.at(2).prop("textFirstCell")).toEqual(
-        "No course available yet"
-      );
+      expect(item.at(2).prop("textFirstCell")).toEqual("No course available yet");
       expect(item.at(2).prop("textSecondCell")).toEqual(null);
       expect(item.at(2).prop("isHeader")).toEqual(false);
     });

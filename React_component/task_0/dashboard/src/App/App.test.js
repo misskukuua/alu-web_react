@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { shallow } from 'enzyme';
 import App from './App';
@@ -39,13 +38,12 @@ describe('<App />', () => {
         expect(wrapper.find(Footer)).toHaveLength(1);
     });
 
-    // When isLoggedIn is true or user is logged into app
-    it('verifies that the Login component is not included.', () => {
+    it('verifies that the Login component is not included when isLoggedIn is true', () => {
         const wrapper = shallow(<App isLoggedIn={ true } />);
         expect(wrapper.find(Login)).toHaveLength(0);
     });
 
-    it('verifies that the Login component is not included.', () => {
+    it('verifies that the CourseList component is included when isLoggedIn is true', () => {
         const wrapper = shallow(<App isLoggedIn={ true } />);
         expect(wrapper.find(CourseList)).toHaveLength(1);
     });
