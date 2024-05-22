@@ -11,32 +11,45 @@ describe("App tests", () => {
 });
 
 describe("When ctrl + h is pressed", () => {
+  let alertMock;
+  let logOutMock;
+
+  beforeAll(() => {
+    // Mock window.alert before all tests
+    alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    // Restore window.alert after all tests
+    alertMock.mockRestore();
+  });
+
+  beforeEach(() => {
+    // Mock logOut function
+    logOutMock = jest.fn();
+  });
+
   it("calls logOut function", () => {
-    const mocked = jest.fn();
-    const wrapper = shallow(<App logOut={mocked} />);
+    const wrapper = shallow(<App logOut={logOutMock} />);
     const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
     document.dispatchEvent(event);
 
-    expect(mocked).toHaveBeenCalledTimes(1);
+    expect(logOutMock).toHaveBeenCalledTimes(1);
   });
 
   it("checks that alert function is called", () => {
-    const spy = jest.spyOn(window, "alert");
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(<App logOut={logOutMock} />);
     const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
     document.dispatchEvent(event);
 
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
+    expect(alertMock).toHaveBeenCalled();
   });
 
   it('checks that the alert is "Logging you out"', () => {
-    const spy = jest.spyOn(window, "alert");
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(<App logOut={logOutMock} />);
     const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
     document.dispatchEvent(event);
 
-    expect(spy).toHaveBeenCalledWith("Logging you out");
-    spy.mockRestore();
+    expect(alertMock).toHaveBeenCalledWith("Logging you out");
   });
 });

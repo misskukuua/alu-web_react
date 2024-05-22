@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "task 5 of 0x02-react intro",
   "main": "./src/index.js",
-  
   "scripts": {
     "build": "webpack --config ./config/webpack.config.js",
     "start-dev": "webpack serve -c ./config/webpack.config.js --open",
@@ -31,6 +30,7 @@
     "html-webpack-plugin": "^5.5.0",
     "image-webpack-loader": "^8.0.1",
     "jest": "^27.3.1",
+    "jsdom": "^24.0.0",
     "react-hot-loader": "^4.13.0",
     "regenerator-runtime": "^0.13.9",
     "style-loader": "^3.3.1",
@@ -44,18 +44,16 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
-
   "jest": {
     "setupFiles": [
-        "<rootDir>/config/setupTests.js"
+      "<rootDir>/config/setupTests.js"
     ],
     "moduleNameMapper": {
-        "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-        "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "transform": {
-        "\\.js$": "<rootDir>/node_modules/babel-jest"
+      "\\.js$": "<rootDir>/node_modules/babel-jest"
     }
-}
-
+  }
 }
