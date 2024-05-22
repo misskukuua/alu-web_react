@@ -8,6 +8,8 @@ import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
 import Notifications from '../Notifications/Notifications';
 import CourseList from '../CourseList/CourseList';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
+import BodySection from '../BodySection/BodySection';
 import { getLatestNotification } from '../utils/utils';
 
 class App extends React.Component {
@@ -47,7 +49,15 @@ class App extends React.Component {
         <Notifications displayDrawer={false} listNotifications={listNotifications} />
         <div className="App">
           <Header />
-          {isLoggedIn ? <CourseList listCourses={listCourses} /> : <Login />}
+          <BodySectionWithMarginBottom title="Course list">
+            {isLoggedIn ? <CourseList listCourses={listCourses} /> : <Login />}
+          </BodySectionWithMarginBottom>
+          <BodySectionWithMarginBottom title="Log in to continue">
+            <Login />
+          </BodySectionWithMarginBottom>
+          <BodySection title="News from the School">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna in lorem rutrum tristique.</p>
+          </BodySection>
           <Footer />
         </div>
       </>
