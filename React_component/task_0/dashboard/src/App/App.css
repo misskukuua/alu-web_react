@@ -1,12 +1,12 @@
+:root {
+  --main-color: #e01d3f;
+}
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    /* font-family: sans-serif; */
-  }
-  
-  :root {
-    --holb-red: #FF0000;
-  }
-  
+.App {
+  border-bottom: 3px solid var(--main-color);
+}
+
+.App-body {
+  display: flex;
+  justify-content: center;
+}
