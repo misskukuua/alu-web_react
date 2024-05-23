@@ -1,68 +1,38 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { StyleSheet, css } from "aphrodite";
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
 
-const NotificationItem = React.memo(function NotificationItem({
-  type,
-  value,
-  html,
-  markAsRead,
-  id,
-}) {
-  let listItem;
+const styles = StyleSheet.create({
+    NotificationListItemDefault: {
+        color: 'blue',
+    },
 
-  let typeStyle = css(type === "urgent" ? styles.urgent : styles.default);
-
-  if (value) {
-    listItem = (
-      <li
-        className={typeStyle}
-        data-notification-type={type}
-        onClick={() => markAsRead(id)}
-      >
-        {value}
-      </li>
-    );
-  } else {
-    listItem = (
-      <li
-        className={typeStyle}
-        data-notification-type={type}
-        dangerouslySetInnerHTML={html}
-        onClick={() => markAsRead(id)}
-      ></li>
-    );
-  }
-
-  return listItem;
+    NotificationListItemUrgent: {
+        color: 'red',
+    },
 });
 
-NotificationItem.defaultProps = {
-  type: "default",
-  value: "",
-  html: {},
-  markAsRead: () => {},
-  id: NaN,
+// functional component ES6 shortcut
+const NotificationItem = ({ type, html, value, markAsRead }) => {
+    // JSX goes here
+    return (
+        <li
+            data-notification-type={ type }
+            dangerouslySetInnerHTML={ html }
+            onClick={ markAsRead }
+            className={ type === 'default' ? css(styles.NotificationListItemDefault) : css(styles.NotificationListItemUrgent) }
+        >{ value }</li>
+    );
 };
 
 NotificationItem.propTypes = {
-  type: PropTypes.string,
-  value: PropTypes.string,
-  html: PropTypes.shape({
-    __html: PropTypes.string,
-  }),
-  markAsRead: PropTypes.func,
-  id: PropTypes.number,
+    html: PropTypes.shape({ __html: PropTypes.string }),
+    value: PropTypes.string,
+    type: PropTypes.string.isRequired
 };
 
-const styles = StyleSheet.create({
-  default: {
-    color: "blue",
-  },
+NotificationItem.defaultProps = {
+    type: 'default',
+}
 
-  urgent: {
-    color: "red",
-  },
-});
-
-export default NotificationItem;
+export default memo(NotificationItem);

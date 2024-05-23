@@ -1,61 +1,58 @@
-import { shallow } from "enzyme";
-import React from "react";
-import NotificationItem from "./NotificationItem";
-import { StyleSheetTestUtils } from "aphrodite";
+/**
+ * @jest-environment jsdom
+ */
 
-describe("<Notifications />", () => {
-  beforeAll(() => {
+import React from 'react';
+import { shallow } from 'enzyme';
+import NotificationItem from './NotificationItem';
+import Notifications from './Notifications';
+import { StyleSheetTestUtils } from 'aphrodite';
+
+beforeEach(() => {
     StyleSheetTestUtils.suppressStyleInjection();
-  });
-  afterAll(() => {
-    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-  });
+});
 
-  it("NotificationItem renders without crashing", () => {
-    const wrapper = shallow(<NotificationItem />);
-    expect(wrapper.exists()).toEqual(true);
-  });
-  it("Verify that by passing dummy type and value props, it renders the correct html", () => {
-    const wrapper = shallow(<NotificationItem type="default" value="test" />);
-    wrapper.update();
-    const listItem = wrapper.find("li");
+describe('<NotificationItem />', () => {
+    it('renders an <NotificationItems /> component', () => {
+        const wrapper = shallow(<NotificationItem />);
+        expect(wrapper).toHaveLength(1);
+    });
 
-    expect(listItem).toHaveLength(1);
-    expect(listItem.text()).toEqual("test");
-    expect(listItem.prop("data-notification-type")).toEqual("default");
-  });
-  it("Passing a dummy html prop, it renders the correct html (for example", () => {
-    const text = "Here is the list of notifications";
-    const wrapper = shallow(
-      <NotificationItem html={{ __html: "<u>test</u>" }} />
-    );
-    wrapper.update();
-    const listItem = wrapper.find("li");
-    // expect(listItem.html()).toEqual(
-    //   '<li data-notification-type="default"><u>test</u></li>'
-    // );
+    it('renders an <NotificationItem /> component with type and value', () => {
+        const wrapper = shallow(<NotificationItem type="default" value="test" />);
+        expect(wrapper.props()[ 'data-notification-type' ]).toEqual('default');
+        expect(wrapper.text()).toEqual('test');
+        expect(wrapper.html()).toContain('<li data-notification-type="default"');
+        expect(wrapper.html()).toContain('test</li>');
+    });
 
-    expect(listItem.props()["data-notification-type"]).toEqual("default");
-    expect(listItem.html()).toContain("<u>test</u>");
-  });
-  it("when calling the function markAsRead on an instance of the component, the spy is being called with the right message", () => {
-    const id = 27;
+    it('renders an <NotificationItem /> component checking for html pass through', () => {
+        const wrapper = shallow(<NotificationItem html={ { __html: '<u>test</u>' } } />);
+        expect(wrapper.html()).toContain('<u>test</u>');
+    });
 
-    const wrapper = shallow(
-      <NotificationItem type="default" value="test" id={id} />
-    );
+    it('calls markAsRead with the right id', () => {
+        const listNotifications = [
+            { id: 1, type: 'default', value: 'New course available' },
+            { id: 2, type: 'urgent', value: 'New resume available' },
+            { id: 3, type: 'urgent', value: 'Holberton Danger' },
+        ];
 
-    const instance = wrapper;
+        const wrapper = shallow(<Notifications displayDrawer={ true } listNotifications={ listNotifications } />);
 
-    instance.markAsRead = jest.fn();
+        const instance = wrapper.instance();
+        const spy = jest.spyOn(instance, 'markAsRead');
 
-    const listItem = wrapper.find("li").first();
+        const item1 = wrapper.find(NotificationItem).at(0).dive();
+        item1.simulate('click');
+        expect(spy).toBeCalledWith(1);
 
-    listItem.simulate("click");
+        const item2 = wrapper.find(NotificationItem).at(1).dive();
+        item2.simulate('click');
+        expect(spy).toBeCalledWith(2);
 
-    instance.markAsRead(id);
-
-    expect(instance.markAsRead).toHaveBeenCalledWith(27);
-    jest.restoreAllMocks();
-  });
+        const item3 = wrapper.find(NotificationItem).at(2).dive();
+        item3.simulate('click');
+        expect(spy).toBeCalledWith(3);
+    });
 });
