@@ -11,7 +11,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.2",
     "file-loader": "^6.2.0",
-    "image-webpack-loader": "^7.0.1",
+    "image-webpack-loader": "^8.1.0",
     "jest": "^26.6.3",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
@@ -36,10 +36,10 @@
     "enzyme-adapter-react-16": "^1.15.6",
     "webpack": "^5.22.0",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^5.0.4"
   },
   "jest": {
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "<rootDir>/config/setupTests.js"
     ],
     "moduleNameMapper": {
