@@ -1,23 +1,42 @@
-// NotificationItem.js
-import React, { memo } from "react";
+
+import React from "react";
 import PropTypes from "prop-types";
+import "./Notifications.css";
 
-const NotificationItem = ({ type, value, html, id, markAsRead }) => {
-  const handleClick = () => {
-    markAsRead(id);
-  };
+const NotificationItem = React.memo(function NotificationItem({
+  type,
+  value,
+  html,
+  markAsRead,
+  id,
+}) {
+  let listItem;
 
-  return (
-    <li onClick={handleClick} data-notification-type={type}>
-      {value ? value : <span dangerouslySetInnerHTML={html}></span>}
-    </li>
-  );
-};
+  if (value) {
+    listItem = (
+      <li data-notification-type={type} onClick={() => markAsRead(id)}>
+        {value}
+      </li>
+    );
+  } else {
+    listItem = (
+      <li
+        data-notification-type={type}
+        dangerouslySetInnerHTML={html}
+        onClick={() => markAsRead(id)}
+      ></li>
+    );
+  }
+
+  return listItem;
+});
 
 NotificationItem.defaultProps = {
   type: "default",
   value: "",
   html: {},
+  markAsRead: () => {},
+  id: NaN,
 };
 
 NotificationItem.propTypes = {
@@ -26,8 +45,8 @@ NotificationItem.propTypes = {
   html: PropTypes.shape({
     __html: PropTypes.string,
   }),
-  id: PropTypes.number.isRequired,
-  markAsRead: PropTypes.func.isRequired,
+  markAsRead: PropTypes.func,
+  id: PropTypes.number,
 };
 
-export default memo(NotificationItem);
+export default NotificationItem;
