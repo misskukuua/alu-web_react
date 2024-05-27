@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import Notifications from "../Notifications/Notifications";
 import Header from "../Header/Header";
@@ -10,6 +9,8 @@ import Footer from "../Footer/Footer";
 import PropTypes from "prop-types";
 import { getLatestNotification } from "../utils/utils";
 import { StyleSheet, css } from "aphrodite";
+import { user, logOut } from "./AppContext";
+import AppContext from "./AppContext";
 
 const listCourses = [
   { id: 1, name: "ES6", credit: 60 },
@@ -31,13 +32,15 @@ class App extends Component {
     this.handleKeyCombination = this.handleKeyCombination.bind(this);
     this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
     this.handleHideDrawer = this.handleHideDrawer.bind(this);
-    this.state = { displayDrawer: false };
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
+    this.state = { displayDrawer: false, user, logOut: this.logOut };
   }
 
   handleKeyCombination(e) {
     if (e.key === "h" && e.ctrlKey) {
       alert("Logging you out");
-      this.props.logOut();
+      this.state.logOut();
     }
   }
 
@@ -49,6 +52,20 @@ class App extends Component {
     this.setState({ displayDrawer: false });
   }
 
+  logIn(email, password) {
+    this.setState({
+      user: {
+        email,
+        password,
+        isLoggedIn: true,
+      },
+    });
+  }
+
+  logOut() {
+    this.setState({ user });
+  }
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyCombination);
   }
@@ -58,11 +75,17 @@ class App extends Component {
   }
 
   render() {
-    const { isLoggedIn, logOut } = this.props;
-    const { displayDrawer } = this.state;
+    const {
+      user,
+      user: { isLoggedIn },
+      logOut,
+      displayDrawer,
+    } = this.state;
+
+    const value = { user, logOut };
 
     return (
-      <>
+      <AppContext.Provider value={value}>
         <Notifications
           listNotifications={listNotifications}
           displayDrawer={displayDrawer}
@@ -76,7 +99,7 @@ class App extends Component {
           <div className={css(styles.appBody)}>
             {!isLoggedIn ? (
               <BodySectionWithMarginBottom title="Log in to continue">
-                <Login />
+                <Login logIn={this.logIn} />
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Course list">
@@ -103,20 +126,14 @@ class App extends Component {
             <Footer />
           </div>
         </div>
-      </>
+      </AppContext.Provider>
     );
   }
 }
 
-App.defaultProps = {
-  isLoggedIn: false,
-  logOut: () => {},
-};
+App.defaultProps = {};
 
-App.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  logOut: PropTypes.func,
-};
+App.propTypes = {};
 
 const cssVars = {
   mainColor: "#e01d3f",

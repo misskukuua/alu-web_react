@@ -2,6 +2,7 @@ import { shallow, mount } from "enzyme";
 import React from "react";
 import App from "./App";
 import { StyleSheetTestUtils } from "aphrodite";
+import AppContext, { user, logOut } from "./AppContext";
 
 describe("<App />", () => {
   beforeAll(() => {
@@ -41,15 +42,21 @@ describe("<App />", () => {
     expect(wrapper.find("CourseList")).toHaveLength(0);
   });
   it("isLoggedIn is true", () => {
-    const wrapper = shallow(<App isLoggedIn />);
-    wrapper.update();
+    const wrapper = shallow(<App />);
+    wrapper.setState({
+      user: {
+        ...user,
+        isLoggedIn: true,
+      },
+    });
+
     expect(wrapper.find("Login")).toHaveLength(0);
     expect(wrapper.find("CourseList")).toHaveLength(1);
   });
 
   it("when the keys control and h are pressed the logOut function, passed as a prop, is called and the alert function is called with the string Logging you out", () => {
     const events = {};
-    const logout = jest.fn();
+    const logOutSpy = jest.fn();
 
     document.addEventListener = jest.fn((event, cb) => {
       events[event] = cb;
@@ -57,12 +64,17 @@ describe("<App />", () => {
 
     window.alert = jest.fn();
 
-    shallow(<App logOut={logout} />);
+    const wrapper = mount(
+      <AppContext.Provider value={{ user, logOut }}>
+        <App />
+      </AppContext.Provider>
+    );
+
+    wrapper.setState({ logOut: logOutSpy });
 
     events.keydown({ key: "h", ctrlKey: true });
-
     expect(window.alert).toHaveBeenCalledWith("Logging you out");
-    expect(logout).toHaveBeenCalled();
+    expect(logOutSpy).toHaveBeenCalled();
 
     jest.restoreAllMocks();
   });
@@ -87,14 +99,62 @@ describe("<App />", () => {
     const wrapper = shallow(<App />);
     expect(wrapper.state().displayDrawer).toEqual(false);
 
-    // const instance = wrapper.instance();
+    const instance = wrapper.instance();
 
-    wrapper.instance().handleDisplayDrawer();
+    instance.handleDisplayDrawer();
 
     expect(wrapper.state().displayDrawer).toEqual(true);
 
-    wrapper.instance().handleHideDrawer();
+    instance.handleHideDrawer();
 
     expect(wrapper.state().displayDrawer).toEqual(false);
+  });
+
+  it("test to verify that the logIn function updates the state correctly", () => {
+    const wrapper = mount(
+      <AppContext.Provider value={{ user, logOut }}>
+        <App />
+      </AppContext.Provider>
+    );
+
+    const loggedUser = {
+      email: "Larry@hudson.com",
+      password: "123456789",
+      isLoggedIn: true,
+    };
+
+    const instance = wrapper.instance();
+
+    expect(wrapper.state().user).toEqual(user);
+
+    instance.logIn(loggedUser.email, loggedUser.password);
+
+    expect(wrapper.state().user).toEqual(loggedUser);
+  });
+
+  it("test to verify that the logOut function updates the state correctly", () => {
+    const wrapper = mount(
+      <AppContext.Provider value={{ user, logOut }}>
+        <App />
+      </AppContext.Provider>
+    );
+
+    const loggedUser = {
+      email: "Larry@hudson.com",
+      password: "123456789",
+      isLoggedIn: true,
+    };
+
+    const instance = wrapper.instance();
+
+    expect(wrapper.state().user).toEqual(user);
+
+    instance.logIn(loggedUser.email, loggedUser.password);
+
+    expect(wrapper.state().user).toEqual(loggedUser);
+
+    instance.logOut();
+
+    expect(wrapper.state().user).toEqual(user);
   });
 });
